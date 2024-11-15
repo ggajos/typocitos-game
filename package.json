@@ -2,10 +2,16 @@
   "name": "typocitos-game",
   "version": "1.0.0",
   "scripts": {
+    "clear:publish": "if exist ./dist (rmdir /s /q ./dist)",
+    "clear:game": "if exist ../typocitos/dist (rmdir /s /q ../typocitos/dist)",
+    "install:docs": "cd ../typocitos/api && npm prune && npm i",
+    "install:game": "cd ../typocitos && npm prune && npm i",
+    "install:this": "npm prune && npm i",
     "build:docs": "cd ../typocitos/api && npm i && npm run-script docs",
     "build:game": "cd ../typocitos && npm i && npm run-script lint && npm run-script build",
-    "dist:mv": "move ../typocitos/dist ./dist",
-    "deploy": "gh-pages -d dist"
+    "build:mv": "move ../typocitos/dist ./dist",
+    "publish": "gh-pages -d dist",
+    "all": "run-s clear:* install:* build:docs build:game build:mv"
   },
   "devDependencies": {
     "gh-pages": "^6.2.0",
