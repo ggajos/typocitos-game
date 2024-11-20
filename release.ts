@@ -1,6 +1,5 @@
-import { exec, execSync } from 'child_process'
+import { execSync } from 'child_process'
 import ghpages from 'gh-pages'
-import shelljs from 'shelljs'
 
 const version = process.argv[2]
 if (!version) {
