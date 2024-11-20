@@ -1,5 +1,6 @@
-import runAll from 'npm-run-all'
+import { exec, execSync } from 'child_process'
 import ghpages from 'gh-pages'
+import shelljs from 'shelljs'
 
 const version = process.argv[2]
 if (!version) {
@@ -10,22 +11,17 @@ if (version != 'latest' && !version.startsWith('v')) {
 }
 console.log(`Parameter: version = ${version}`)
 
-// BASE URL IS NOT WORKING
-process.env['BASE_URL'] = `https://ggajos.com/typocitos-game/${version}/`
-console.log(`Env:BASE_URL = ${process.env['BASE_URL']}`)
+const BASE_URL = `https://ggajos.com/typocitos-game/${version}/`
+console.log(`Env:BASE_URL = ${BASE_URL}`)
 
 async function runPackage() {
-    const prev = process.cwd()
-    process.chdir("../typocitos")
-    await runAll(
-        ['p:all'],
-        {
-            stdin: process.stdin,
-            stdout: process.stdout,
-            stderr: process.stderr
-        }
-    )
-    process.chdir(prev)
+    execSync('npm run-script p:all', {
+        cwd: "../typocitos",
+        env: {
+            BASE_URL
+        },
+        stdio: 'inherit'
+    })
 }
 
 async function runPublish() {
@@ -35,14 +31,14 @@ async function runPublish() {
             dest: version
         },
         () => {
-            console.log(`Published to ${process.env['BASE_URL']}`)
+            console.log(`Published to ${BASE_URL}`)
         }
     )
 }
 
 async function run() {
-    // await runPackage()
-    // await runPublish()
+    await runPackage()
+    await runPublish()
 }
 
 run()
